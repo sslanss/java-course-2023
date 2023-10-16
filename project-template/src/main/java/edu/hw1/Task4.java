@@ -5,7 +5,9 @@ public final class Task4 {
     }
 
     public static String fixString(String string) {
-        if (string != null) {
+        if (string == null) {
+            return null;
+        } else {
             StringBuilder builder = new StringBuilder();
             int i;
             for (i = 0; i < string.length() - 1; i += 2) {
@@ -14,6 +16,5 @@ public final class Task4 {
             }
             return builder.toString() + (i == string.length() - 1 ? string.charAt(i) : "");
         }
-        return null;
     }
 }

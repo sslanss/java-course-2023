@@ -7,7 +7,9 @@ public final class Task1 {
     }
 
     public static int minutesToSeconds(String string) {
-        if (isStringValid(string)) {
+        if (!isStringValid(string)) {
+            return -1;
+        } else {
             String[] parts = string.split(":");
             if (isInvalidParts(parts)) {
                 return -1;
@@ -19,7 +21,6 @@ public final class Task1 {
             }
             return minutes * SECONDS_IN_A_MINUTE + seconds;
         }
-        return -1;
     }
 
     private static boolean isStringValid(String string) {
