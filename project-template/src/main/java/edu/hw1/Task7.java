@@ -11,7 +11,9 @@ public final class Task7 {
 
     public static int rotateLeft(int number, int shift) {
         String binaryNumber = Integer.toBinaryString(number);
-        if (isShiftSizeCorrect(binaryNumber.length(), shift)) {
+        if (!isShiftSizeCorrect(binaryNumber.length(), shift)) {
+            return -1;
+        } else {
             StringBuilder shifted = new StringBuilder(binaryNumber);
             StringBuilder tmpChars = new StringBuilder();
             for (int i = 0; i < shift; i++) {
@@ -27,12 +29,13 @@ public final class Task7 {
             String res = shifted.toString();
             return Integer.parseInt(res, 2);
         }
-        return -1;
     }
 
     public static int rotateRight(int number, int shift) {
         String binaryNumber = Integer.toBinaryString(number);
-        if (isShiftSizeCorrect(binaryNumber.length(), shift)) {
+        if (!isShiftSizeCorrect(binaryNumber.length(), shift)) {
+            return -1;
+        } else {
             StringBuilder shifted = new StringBuilder(binaryNumber);
             StringBuilder tmpChars = new StringBuilder();
             for (int i = shifted.length() - shift; i < shifted.length(); i++) {
@@ -47,6 +50,5 @@ public final class Task7 {
             String res = shifted.toString();
             return Integer.parseInt(res, 2);
         }
-        return -1;
     }
 }

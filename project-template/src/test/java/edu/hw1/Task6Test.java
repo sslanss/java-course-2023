@@ -16,6 +16,13 @@ public class Task6Test {
     }
 
     @Test
+    public void functionShouldReturnMinusOneHandlingSameDigitsNumber(){
+        int inputValue = 4444;
+        int result = Task6.countK(inputValue);
+        Assertions.assertThat(result).isEqualTo(-1);
+    }
+
+    @Test
     public void functionShouldReturnOneHandlingConstKNumber() {
         int inputValue = 6174;
         int result = Task6.countK(inputValue);

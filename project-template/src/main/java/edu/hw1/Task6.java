@@ -8,23 +8,33 @@ public final class Task6 {
 
     private static final int NUMBER_BASE = 10;
 
+    private static final int SECOND_DEGREE_NUMBER_BASE = 100;
+
+    private static final int THIRD_DEGREE_NUMBER_BASE = 1000;
+
+    private static final int MIN_FOUR_DIGITS_NUMBER = 1000;
+
+    private static final int MAX_FOUR_DIGITS_NUMBER = 9999;
+
     private Task6() {
     }
 
     private static boolean isNumberFourDigit(int number) {
-        return number > (int) Math.pow(NUMBER_BASE, 3)
-            && number < (int) Math.pow(NUMBER_BASE, 4);
+        return number > MIN_FOUR_DIGITS_NUMBER && number < MAX_FOUR_DIGITS_NUMBER;
+
     }
 
     private static boolean isNumberDigitsAreTheSame(int number) {
-        int firstDigit = number / (int) Math.pow(NUMBER_BASE, 3);
-        return (firstDigit == number / (int) Math.pow(NUMBER_BASE, 2) % NUMBER_BASE
-            && firstDigit == number / NUMBER_BASE % NUMBER_BASE && firstDigit == number % NUMBER_BASE);
+        int firstDigit = number / THIRD_DEGREE_NUMBER_BASE;
+        int secondDigit = number / SECOND_DEGREE_NUMBER_BASE % NUMBER_BASE;
+        int thirdDigit = number / NUMBER_BASE % NUMBER_BASE;
+        int fourthDigit = number % NUMBER_BASE;
+        return firstDigit == secondDigit && secondDigit == thirdDigit && thirdDigit == fourthDigit;
     }
 
     private static int[] convertNumberToDigitArray(int number) {
         final int NUMBER_LENGTH = 4;
-        int[] digitsArray = new int[4];
+        int[] digitsArray = new int[NUMBER_LENGTH];
         for (int i = 0; i < NUMBER_LENGTH; i++) {
             digitsArray[i] = number % NUMBER_BASE;
             number /= NUMBER_BASE;

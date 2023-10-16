@@ -9,13 +9,13 @@ public final class Task5 {
     }
 
     private static boolean isPalindrome(int number) {
-        int tmp = number;
-        int newNumber = 0;
+        int originalNumber = number;
+        int reversedNumber = 0;
         while (number > 0) {
-            newNumber = newNumber * NUMBER_BASE + number % NUMBER_BASE;
+            reversedNumber = reversedNumber * NUMBER_BASE + number % NUMBER_BASE;
             number /= NUMBER_BASE;
         }
-        return newNumber == tmp;
+        return reversedNumber == originalNumber;
     }
 
     private static boolean isNumberSingleDigit(int number) {
@@ -23,7 +23,9 @@ public final class Task5 {
     }
 
     private static boolean isNumberOfDigitsOdd(int number) {
-        return Task2.countDigits(number) % 2 > 0;
+        String numberString = String.valueOf(number);
+        int numberOfDigits = numberString.length();
+        return numberOfDigits % 2 > 0;
     }
 
     public static boolean isPalindromeDescendant(int number) {
