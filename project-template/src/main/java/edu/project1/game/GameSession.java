@@ -42,16 +42,6 @@ public class GameSession {
         }
     }
 
-    /*private char[] createEmptyUserAnswer(int size) {
-        userAnswer = new char[size];
-        Arrays.fill(userAnswer, '_');
-        int spacePosition = answer.indexOf(' ');
-        if (spacePosition != -1) {
-            userAnswer[spacePosition] = ' ';
-        }
-        return userAnswer;
-    }*/
-
     public char[] getUserAnswer() {
         return userAnswer;
     }
