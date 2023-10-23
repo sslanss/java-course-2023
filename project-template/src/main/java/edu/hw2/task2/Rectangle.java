@@ -4,7 +4,7 @@ public class Rectangle {
     final private int width;
     final private int height;
 
-    public Rectangle (int width, int height) {
+    public Rectangle(int width, int height) {
         this.width = width;
         this.height = height;
     }

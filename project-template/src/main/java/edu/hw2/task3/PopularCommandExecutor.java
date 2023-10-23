@@ -4,7 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class PopularCommandExecutor {
+
     private final ConnectionManager manager;
+
     private final int maxAttempts;
 
     private final static Logger LOGGER = LogManager.getLogger();
@@ -20,12 +22,11 @@ public final class PopularCommandExecutor {
 
     void tryExecute(String command) {
         int currentAttempts = 0;
-        int successedAttempts = 0;
         ConnectionException lastException = null;
         while (currentAttempts != maxAttempts) {
             try (Connection connection = manager.getConnection()) {
                 connection.execute(command);
-                successedAttempts++;
+                return;
             } catch (ConnectionException e) {
                 LOGGER.info(e.getMessage());
                 lastException = e;
@@ -34,14 +35,11 @@ public final class PopularCommandExecutor {
             }
             currentAttempts++;
         }
-        if (successedAttempts < currentAttempts) {
-            if (lastException != null ) {
-                try {
-                    throw new ConnectionException("Connection error", lastException);
-                } catch (ConnectionException e) {
-                    LOGGER.info(e.getMessage() + " at: " + e.getCause());
-                }
-            }
+        try {
+            throw new ConnectionException("Connection error", lastException);
+        } catch (ConnectionException e) {
+            LOGGER.info(e.getMessage() + " at: " + e.getCause());
         }
     }
+
 }

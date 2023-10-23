@@ -4,27 +4,24 @@ import java.util.Random;
 
 public class DefaultConnectionManager implements ConnectionManager {
 
-    private double stableConnectionChance;
-
     private double faultyConnectionChance;
 
-    public void setStableConnectionChance(double chance) {
-        this.stableConnectionChance = chance;
-    }
     public void setFaultyConnectionChance(double chance) {
         this.faultyConnectionChance = chance;
     }
 
     public DefaultConnectionManager() {
-        stableConnectionChance = 0.8;
         faultyConnectionChance = 0.2;
     }
+
     @Override
     public Connection getConnection() {
         Random random = new Random();
         double chance = random.nextDouble(0, 1);
         if (chance <= faultyConnectionChance) {
             return new FaultyConnection();
-        } else return new StableConnection();
+        } else {
+            return new StableConnection();
+        }
     }
 }
