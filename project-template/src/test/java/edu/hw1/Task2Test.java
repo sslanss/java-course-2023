@@ -3,7 +3,7 @@ package edu.hw1;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class BracesClasterizerTest {
+public class Task2Test {
     @Test
     public void functionShouldReturnCorrectResultHandlingPositiveNumber() {
         int inputNumber = 55555;
