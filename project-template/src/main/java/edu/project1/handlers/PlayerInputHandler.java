@@ -74,6 +74,33 @@ public class PlayerInputHandler {
             }
             return userInputSymbol;
         }
+        /*boolean isValidInput = false;
+        char userInputSymbol = ' ';
+        do {
+            try {
+                System.out.print("Enter a letter: ");
+                String input = scanner.next();
+                if (input.equalsIgnoreCase("exit")) {
+                    break;
+                } else if (input.length() == 1) {
+                    userInputSymbol = input.charAt(0);
+                    if (Character.isLetter(userInputSymbol)) {
+                        if (isCharUnused(availableLetters, userInputSymbol)) {
+                            isValidInput = true;
+                        } else {
+                            System.out.println("This letter had already been used.");
+                        }
+                    } else {
+                        System.out.println("Mistake: not a letter.");
+                    }
+                } else {
+                    System.out.println("Invalid input. Enter exactly one character.");
+                }
+            } catch (Exception e) {
+                System.out.println("Mistake: " + e.getMessage());
+            }
+        } while (!isValidInput);
+        return userInputSymbol;*/
     }
 
     private int getCorrectInt(int min, int max) {
@@ -88,6 +115,27 @@ public class PlayerInputHandler {
             }
         }
         return userInputSymbol;
+        /*boolean isValidInput = false;
+        int userInputNumber = 0;
+        do {
+            try {
+                System.out.print("Enter a number from " + min + " to " + max + " : ");
+                if (scanner.hasNextInt()) {
+                    userInputNumber = scanner.nextInt();
+                    if (userInputNumber >= min && userInputNumber <= max) {
+                        isValidInput = true;
+                    } else {
+                        System.out.println("The number out of range. Please, try again.");
+                    }
+                } else {
+                    System.out.println("Invalid input.");
+                    scanner.next();
+                }
+            } catch (Exception e) {
+                System.out.println("Mistake: " + e.getMessage());
+            }
+        } while (!isValidInput);
+        return userInputNumber;*/
     }
 
     public int getInt(int min, int max) {
