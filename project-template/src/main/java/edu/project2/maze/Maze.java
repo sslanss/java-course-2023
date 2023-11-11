@@ -1,21 +1,26 @@
 package edu.project2.maze;
 
+import org.jetbrains.annotations.NotNull;
+
 public final class Maze {
     private final int height;
     private final int width;
     private final Cell[][] grid;
 
     public Maze(int height, int width) {
+        if (height <= 0 || width <= 0) {
+            throw new IllegalArgumentException("Height and width of Maze must be positive.");
+        }
         this.height = height;
         this.width = width;
-        grid = new Cell[height][width];
+        this.grid = new Cell[height][width];
         initializeGrid();
     }
 
     private void initializeGrid() {
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
-                grid[row][col] = new Cell(row, col, Cell.Type.WALL);
+                grid[row][col] = new Cell(new Coordinate(row, col), Cell.Type.WALL);
             }
         }
     }
@@ -32,20 +37,20 @@ public final class Maze {
         return grid;
     }
 
-    public Cell getCell(Coordinate coordinate) {
+    public Cell getCell(@NotNull Coordinate coordinate) {
         return grid[coordinate.row()][coordinate.col()];
     }
 
-    public void setCell(Coordinate coordinate, Cell.Type type) {
-        grid[coordinate.row()][coordinate.col()] = new Cell(coordinate.row(), coordinate.col(), type);
+    public void setCell(@NotNull Coordinate coordinate, Cell.Type type) {
+        grid[coordinate.row()][coordinate.col()] = new Cell(coordinate, type);
     }
 
-    public boolean isValidLocation(Coordinate coordinate) {
+    public boolean isValidLocation(@NotNull Coordinate coordinate) {
         return coordinate.row() >= 0 && coordinate.row() <= height - 1
             && coordinate.col() >= 0 && coordinate.col() <= width - 1;
     }
 
-    public boolean isWall(Coordinate coordinate) {
+    public boolean isWall(@NotNull Coordinate coordinate) {
         return grid[coordinate.row()][coordinate.col()].type().equals(Cell.Type.WALL);
     }
 }
