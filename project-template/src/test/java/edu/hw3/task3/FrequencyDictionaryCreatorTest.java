@@ -1,4 +1,4 @@
-package edu.hw3;
+package edu.hw3.task3;
 
 import edu.hw3.task3.FrequencyDictionaryCreator;
 import org.junit.jupiter.api.Test;

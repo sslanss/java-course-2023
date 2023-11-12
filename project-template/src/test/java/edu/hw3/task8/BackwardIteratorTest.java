@@ -1,4 +1,4 @@
-package edu.hw3;
+package edu.hw3.task8;
 
 import edu.hw3.task8.BackwardIterator;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class BackwarditeratorTest {
+public class BackwardIteratorTest {
 
     @Test
     public void backwardIteratorWithLists(){

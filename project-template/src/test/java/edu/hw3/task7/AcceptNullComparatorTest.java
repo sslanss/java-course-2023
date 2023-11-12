@@ -1,4 +1,4 @@
-package edu.hw3;
+package edu.hw3.task7;
 
 import edu.hw3.task7.AcceptNullComparator;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package edu.hw3;
+package edu.hw3.task1;
 
 import edu.hw3.task1.AtbashEncoder;
 import org.junit.jupiter.api.Test;

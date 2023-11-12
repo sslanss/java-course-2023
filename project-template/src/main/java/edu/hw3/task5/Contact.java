@@ -2,18 +2,22 @@ package edu.hw3.task5;
 
 public class Contact {
 
-    private final String name;
+    private String name;
 
-    private final String surname;
+    private String surname;
 
     public Contact(String string) {
+        parseString(string);
+    }
+
+    public void parseString(String string){
         String[] fullname = string.split(" ");
         if (fullname.length == 2) {
-            this.name = fullname[0];
-            this.surname = fullname[1];
+            name = fullname[0];
+            surname = fullname[1];
         } else if (fullname.length == 1) {
-            this.name = fullname[0];
-            this.surname = "";
+            name = fullname[0];
+            surname = "";
         } else {
             throw new IllegalArgumentException();
         }

@@ -1,71 +1,71 @@
-package edu.hw3;
+package edu.hw3.task2;
 
-import edu.hw3.task2.BracesClasterizer;
+import edu.hw3.task2.BracesClusterizer;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class BracesClasterizerTest {
+public class BracesClusterizerTest {
 
     @Test
-    public void clasterizeWithEmptyInputString() {
+    public void clusterizeWithEmptyInputString() {
         String inputString = "";
-        List<String> result = BracesClasterizer.clusterize(inputString);
+        List<String> result = BracesClusterizer.clusterize(inputString);
         assertThat(result).isEqualTo(new ArrayList<>());
     }
 
     @Test
-    public void clasterizeWithNullInputString() {
-        List<String> result = BracesClasterizer.clusterize(null);
+    public void clusterizeWithNullInputString() {
+        List<String> result = BracesClusterizer.clusterize(null);
         assertThat(result).isEqualTo(new ArrayList<>());
     }
 
     @Test
-    public void clasterizeWithIncorrectInputString() {
+    public void clusterizeWithIncorrectInputString() {
         String inputString = "(((a)()))";
-        List<String> result = BracesClasterizer.clusterize(inputString);
+        List<String> result = BracesClusterizer.clusterize(inputString);
         assertThat(result).isEqualTo(new ArrayList<>());
         inputString = "((()()))a";
-        result = BracesClasterizer.clusterize(inputString);
+        result = BracesClusterizer.clusterize(inputString);
         assertThat(result).isEqualTo(new ArrayList<>());
     }
 
     @Test
-    public void clasterizeWithUnclasterizedInputString() {
+    public void clusterizeWithUnclusterizedInputString() {
         String inputString = "((()())))";
-        List<String> result = BracesClasterizer.clusterize(inputString);
+        List<String> result = BracesClusterizer.clusterize(inputString);
         assertThat(result).isEqualTo(new ArrayList<>());
         inputString = "(((()()))";
-        result = BracesClasterizer.clusterize(inputString);
+        result = BracesClusterizer.clusterize(inputString);
         assertThat(result).isEqualTo(new ArrayList<>());
-        inputString = "((((";
-        result = BracesClasterizer.clusterize(inputString);
+        inputString = "))((";
+        result = BracesClusterizer.clusterize(inputString);
         assertThat(result).isEqualTo(new ArrayList<>());
         inputString = "))))";
-        result = BracesClasterizer.clusterize(inputString);
+        result = BracesClusterizer.clusterize(inputString);
         assertThat(result).isEqualTo(new ArrayList<>());
         inputString = "(((()(()))";
-        result = BracesClasterizer.clusterize(inputString);
+        result = BracesClusterizer.clusterize(inputString);
         assertThat(result).isEqualTo(new ArrayList<>());
     }
 
     @Test
-    public void clasterizeWithClasterizedInputString() {
+    public void clusterizeWithClusterizedInputString() {
         String inputString = "()()()";
-        List<String> result = BracesClasterizer.clusterize(inputString);
+        List<String> result = BracesClusterizer.clusterize(inputString);
         assertThat(result).isEqualTo(new ArrayList<>() {{
             add("()");
             add("()");
             add("()");
         }});
         inputString = "(()()())";
-        result = BracesClasterizer.clusterize(inputString);
+        result = BracesClusterizer.clusterize(inputString);
         assertThat(result).isEqualTo(new ArrayList<>() {{
             add("(()()())");
         }});
         inputString = "((()))(())()()(()())";
-        result = BracesClasterizer.clusterize(inputString);
+        result = BracesClusterizer.clusterize(inputString);
         assertThat(result).isEqualTo(new ArrayList<>() {{
             add("((()))");
             add("(())");
@@ -74,13 +74,13 @@ public class BracesClasterizerTest {
             add("(()())");
         }});
         inputString = "((())())(()(()()))";
-        result = BracesClasterizer.clusterize(inputString);
+        result = BracesClusterizer.clusterize(inputString);
         assertThat(result).isEqualTo(new ArrayList<>() {{
             add("((())())");
             add("(()(()()))");
         }});
         inputString = "(((())())(()(()())))";
-        result = BracesClasterizer.clusterize(inputString);
+        result = BracesClusterizer.clusterize(inputString);
         assertThat(result).isEqualTo(new ArrayList<>() {{
             add("(((())())(()(()())))");
         }});

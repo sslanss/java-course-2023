@@ -1,6 +1,5 @@
-package edu.hw3;
+package edu.hw3.task5;
 
-import edu.hw3.task2.BracesClasterizer;
 import edu.hw3.task5.Contact;
 import edu.hw3.task5.ContactsParser;
 import edu.hw3.task5.SortOrder;

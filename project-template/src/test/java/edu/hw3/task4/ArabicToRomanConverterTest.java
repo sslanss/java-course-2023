@@ -1,4 +1,4 @@
-package edu.hw3;
+package edu.hw3.task4;
 
 import edu.hw3.task4.ArabicToRomanConverter;
 import org.junit.jupiter.api.Test;

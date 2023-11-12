@@ -1,4 +1,4 @@
-package edu.hw3;
+package edu.hw3.task6;
 
 import edu.hw3.task6.MyStockMarket;
 import edu.hw3.task6.Stock;
