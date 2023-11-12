@@ -1,12 +1,14 @@
 package edu.hw4;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 import static edu.hw4.Animal.Sex;
 import static edu.hw4.Animal.Type;
 
@@ -15,6 +17,7 @@ public class AnimalTaskSolver {
     private AnimalTaskSolver() {
     }
 
+    private static final int HEIGHT = 100;
     public static List<Animal> sortAnimalsByHeight(@NotNull List<Animal> animals) {
         return animals.stream()
             .sorted(Comparator.comparingInt(Animal::height))
@@ -24,18 +27,11 @@ public class AnimalTaskSolver {
     public static List<Animal> sortAnimalsByWeight(@NotNull List<Animal> animals, long k) {
         if (k <= 0) {
             return animals;
-        } else {
-            if (k <= animals.size()) {
-                return animals.stream()
-                    .sorted(Comparator.comparingInt(Animal::weight).reversed())
-                    .limit(k)
-                    .toList();
-            } else {
-                return animals.stream()
-                    .sorted(Comparator.comparingInt(Animal::weight).reversed())
-                    .toList();
-            }
         }
+        return animals.stream()
+            .sorted(Comparator.comparingInt(Animal::weight).reversed())
+            .limit(k)
+            .toList();
     }
 
     public static Map<Type, Integer> countAnimalsBySpecies(@NotNull List<Animal> animals) {
@@ -65,13 +61,8 @@ public class AnimalTaskSolver {
 
     public static Map<Type, Animal> findHeaviestAnimalOfEachSpecies(@NotNull List<Animal> animals) {
         return animals.stream()
-            .collect(Collectors.toMap(Animal::type, animal -> animal, (animal1, animal2) -> {
-                if (animal1.weight() < animal2.weight()) {
-                    return animal2;
-                } else {
-                    return animal1;
-                }
-            }));
+            .collect(Collectors.toMap(Animal::type, Function.identity(),
+                BinaryOperator.maxBy(Comparator.comparing(Animal::weight))));
     }
 
     public static Animal findKthOldestAnimal(@NotNull List<Animal> animals, int k) {
@@ -80,8 +71,8 @@ public class AnimalTaskSolver {
         } else {
             Optional<Animal> oldestAnimal = animals.stream()
                 .sorted(Comparator.comparingInt(Animal::age).reversed())
-                .limit(k)
-                .reduce((animal1, animal2) -> animal2);
+                .skip(k-1)
+                .findFirst();
             return oldestAnimal.orElse(null);
         }
     }
@@ -105,7 +96,7 @@ public class AnimalTaskSolver {
 
     public static List<Animal> findBitingAnimalsWithHeightAbove(@NotNull List<Animal> animals) {
         return animals.stream()
-            .filter(animal -> (animal.bites() && animal.height() > 100))
+            .filter(animal -> (animal.bites() && animal.height() > HEIGHT))
             .toList();
     }
 
@@ -118,7 +109,7 @@ public class AnimalTaskSolver {
     public static List<Animal> findAnimalsWithMoreThanTwoWordNames(@NotNull List<Animal> animals) {
         return animals.stream()
             .filter(animal -> {
-                String[] words = animal.name().split(" ");
+                String[] words = animal.name().split("\\s+");
                 return words.length > 2;
             })
             .toList();
@@ -137,14 +128,16 @@ public class AnimalTaskSolver {
 
     public static List<Animal> sortAnimalsByTypeSexName(@NotNull List<Animal> animals) {
         return animals.stream()
-            .sorted(Comparator.comparing(Animal::type).thenComparing(Animal::sex).thenComparing(Animal::name))
+            .sorted(Comparator.comparing(Animal::type)
+                .thenComparing(Animal::sex)
+                .thenComparing(Animal::name))
             .toList();
     }
 
     public static Boolean isSpidersBiteMoreThanDogs(@NotNull List<Animal> animals) {
         Map<Animal.Type, Long> biteTypeCount = animals.stream()
-            .filter(animal -> (animal.type() == Animal.Type.DOG || animal.type() == Animal.Type.SPIDER)
-                && animal.bites())
+            .filter(animal -> (animal.type() == Animal.Type.DOG || animal.type() == Animal.Type.SPIDER))
+            .filter((Animal::bites))
             .collect(Collectors.groupingBy(Animal::type, Collectors.counting()));
         Long spiderBytes = biteTypeCount.getOrDefault(Animal.Type.SPIDER, 0L);
         Long dogBytes = biteTypeCount.getOrDefault(Animal.Type.DOG, 0L);
