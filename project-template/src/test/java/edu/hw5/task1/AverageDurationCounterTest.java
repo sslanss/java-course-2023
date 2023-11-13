@@ -1,10 +1,10 @@
 package edu.hw5.task1;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AverageDurationCounterTest {
     private static AverageDurationCounter averageDurationCounter;
@@ -52,7 +52,7 @@ public class AverageDurationCounterTest {
 
     @Test
     public void getAverageDurationShouldReturnCorrectDurationIfInputListContainsOutOfPeriodDates() {
-        List<String>input = new ArrayList<>() {{
+        List<String> input = new ArrayList<>() {{
             add("2022-03-12, 20:20 - 2022-03-12, 23:50");
             add("2022-04-01, 21:30 - 2022-04-02, 01:20");
             add("2025-04-02, 21:30 - 2025-04-02, 01:20");

@@ -1,18 +1,19 @@
 package edu.hw5.task3;
 
-import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class DateParser {
 
     public DateParser next;
 
     public static DateParser getChain(DateParser first, DateParser... last) {
-        if (first == null)
+        if (first == null) {
             return null;
+        }
         DateParser head = first;
         for (DateParser next : last) {
             head.next = next;

@@ -1,9 +1,9 @@
 package edu.hw5.task3;
 
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.Optional;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DateParserTest {
     @Test
@@ -40,19 +40,21 @@ public class DateParserTest {
         LocalDate currentDate = LocalDate.now().minusDays(1);
 
         Assertions.assertThat(parsedDate.get()).isEqualTo(LocalDate.of(currentDate.getYear(),
-            currentDate.getMonth(), currentDate.getDayOfMonth()));
+            currentDate.getMonth(), currentDate.getDayOfMonth()
+        ));
 
         parsedDate = DateParser.parseDate("32 days ago");
         currentDate = LocalDate.now().minusDays(32);
 
         Assertions.assertThat(parsedDate.get()).isEqualTo(LocalDate.of(currentDate.getYear(),
-            currentDate.getMonth(), currentDate.getDayOfMonth()));
+            currentDate.getMonth(), currentDate.getDayOfMonth()
+        ));
     }
 
     @Test
     public void testParseNumberFormatDate() {
         Optional<LocalDate> parsedDate = DateParser.parseDate("3/2/2020");
-        Assertions.assertThat(parsedDate.get()).isEqualTo(LocalDate.of(2020,2,3));
+        Assertions.assertThat(parsedDate.get()).isEqualTo(LocalDate.of(2020, 2, 3));
 
         parsedDate = DateParser.parseDate("3/2/20");
         Assertions.assertThat(parsedDate.get()).isEqualTo(LocalDate.of(2020, 2, 3));

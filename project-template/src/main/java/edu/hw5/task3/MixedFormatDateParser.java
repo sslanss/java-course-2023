@@ -5,13 +5,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MixedFormatDateParser extends DateParser {
-    private static final Pattern pattern = Pattern.compile("^(\\d+) day|days ago$");
+    private static final Pattern PATTERN = Pattern.compile("^(\\d+) day|days ago$");
 
     @Override
     protected LocalDate tryParseDate(String string) {
-        Matcher matcher = pattern.matcher(string);
+        Matcher matcher = PATTERN.matcher(string);
         if (matcher.find()) {
-            return convertToDate(matcher, pattern);
+            return convertToDate(matcher, PATTERN);
         }
         return tryNext(string);
     }

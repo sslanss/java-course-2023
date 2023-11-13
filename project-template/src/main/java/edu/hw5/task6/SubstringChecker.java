@@ -5,9 +5,14 @@ import java.util.regex.Pattern;
 
 public class SubstringChecker {
 
-    public static boolean isSubstring(String string, String  other) {
-        if (other.isEmpty())
+    private SubstringChecker() {
+
+    }
+
+    public static boolean isSubstring(String string, String other) {
+        if (other.isEmpty()) {
             return false;
+        }
         Pattern substring = Pattern.compile(other);
         Matcher matcher = substring.matcher(string);
         return matcher.find();

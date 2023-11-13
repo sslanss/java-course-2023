@@ -1,6 +1,5 @@
 package edu.hw5.task1;
 
-import org.jetbrains.annotations.NotNull;
 import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -8,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jetbrains.annotations.NotNull;
 
 public class AverageDurationCounter {
 

@@ -9,24 +9,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NumberFormatDateParser extends DateParser {
-    private static final Map<Pattern, Function<Matcher, LocalDate>> patterns;
+    private static final Map<Pattern, Function<Matcher, LocalDate>> FUNCTION_MAP;
 
     static {
-        patterns = new HashMap<>();
-        patterns.put(Pattern.compile("^(\\d{4})-(\\d{1,2})-(\\d{1,2})$"),
-            (Matcher matcher)->LocalDate.of(Integer.parseInt(matcher.group(1)),
-                Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(3))));
-        patterns.put(Pattern.compile("^(\\d{1,2})/(\\d{1,2})/(\\d{4})$"),
-            (Matcher matcher)->LocalDate.of(Integer.parseInt(matcher.group(3)),
-                Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1))));
-        patterns.put(Pattern.compile("^(\\d{1,2})/(\\d{1,2})/(\\d{1,2})$"),
-            (Matcher matcher)->LocalDate.of(Integer.parseInt(matcher.group(3)) + 2000,
-                Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1))));
+        FUNCTION_MAP = new HashMap<>();
+        FUNCTION_MAP.put(
+            Pattern.compile("^(\\d{4})-(\\d{1,2})-(\\d{1,2})$"),
+            (Matcher matcher) -> LocalDate.of(Integer.parseInt(matcher.group(1)),
+                Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(3))
+            )
+        );
+        FUNCTION_MAP.put(
+            Pattern.compile("^(\\d{1,2})/(\\d{1,2})/(\\d{4})$"),
+            (Matcher matcher) -> LocalDate.of(Integer.parseInt(matcher.group(3)),
+                Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1))
+            )
+        );
+        FUNCTION_MAP.put(
+            Pattern.compile("^(\\d{1,2})/(\\d{1,2})/(\\d{1,2})$"),
+            (Matcher matcher) -> LocalDate.of(Integer.parseInt(matcher.group(3)) + 2000,
+                Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1))
+            )
+        );
     }
 
     @Override
     protected LocalDate tryParseDate(String string) {
-        for (var pattern: patterns.keySet()) {
+        for (var pattern : FUNCTION_MAP.keySet()) {
             Matcher matcher = pattern.matcher(string);
             if (matcher.find()) {
                 return convertToDate(matcher, pattern);
@@ -38,16 +47,13 @@ public class NumberFormatDateParser extends DateParser {
     @Override
     protected LocalDate convertToDate(Matcher matcher, Pattern pattern) {
         try {
-            return patterns.get(pattern).apply(matcher);
-        }
-        catch(DateTimeException e)
-        {
+            return FUNCTION_MAP.get(pattern).apply(matcher);
+        } catch (DateTimeException e) {
             return null;
         }
     }
 
     public NumberFormatDateParser() {
     }
-
 
 }
