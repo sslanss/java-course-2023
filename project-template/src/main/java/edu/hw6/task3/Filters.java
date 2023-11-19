@@ -2,6 +2,7 @@ package edu.hw6.task3;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,12 +43,17 @@ public class Filters {
         };
     }
 
-    public static AbstractFilter magicNumbers(byte ...magicNumbers) {
+    public static AbstractFilter hasMagicNumber(byte... magicNumber) {
         return path -> {
-            //Pattern extension = Pattern.compile(glob + '$');
-            //Matcher matcher = extension.matcher(path.toString());
-            //return matcher.find();
-            return false;
+            try (var input = Files.newInputStream(path)) {
+                byte[] bytes = new byte[magicNumber.length];
+                if (input.read(bytes) != magicNumber.length) {
+                    return false;
+                }
+                return Arrays.equals(bytes, magicNumber);
+            } catch (IOException e) {
+                return false;
+            }
         };
     }
 
