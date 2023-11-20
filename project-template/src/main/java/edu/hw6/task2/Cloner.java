@@ -10,21 +10,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Cloner {
+    private static final Pattern COPY =
+        Pattern.compile("(.*?)(( — копия)( \\((\\d+)\\))?)?(\\.[a-z]{2,})$");
+
     private Cloner() {
     }
 
+    @SuppressWarnings("MagicNumber")
     public static void clonePath(Path path) throws IOException {
         if (!Files.exists(path) || !Files.isRegularFile(path)) {
             return;
         }
-        Pattern pattern = Pattern.compile("(.*?)(( — копия)( \\((\\d+)\\))?)?(\\.[a-z]{2,})$");
         String fileName = path.getFileName().toString();
-        Matcher matcher = pattern.matcher(fileName);
+        Matcher matcher = COPY.matcher(fileName);
         if (matcher.find()) {
-            String newFileName = matcher.group(1) +
-                ((matcher.group(2) == null) ? " — копия"
-                    : (matcher.group(3) + ((matcher.group(4) == null) ? " (2)" :
-                    " (" + (Integer.parseInt(matcher.group(5)) + 1) + ")")))
+            String newFileName = matcher.group(1)
+               + ((matcher.group(2) == null) ? " — копия"
+                    : (matcher.group(3) + ((matcher.group(4) == null) ? " (2)"
+                    : " (" + (Integer.parseInt(matcher.group(5)) + 1) + ")")))
                 + matcher.group(6);
             Path destinationPath = path.resolveSibling(newFileName);
             Files.copy(path, destinationPath, StandardCopyOption.REPLACE_EXISTING);

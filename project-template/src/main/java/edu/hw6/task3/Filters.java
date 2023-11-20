@@ -7,11 +7,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Filters {
-    public static final AbstractFilter regularFile = Files::isRegularFile;
-    public static final AbstractFilter readable = Files::isReadable;
-    public static final AbstractFilter hidden = Files::isHidden;
-    public static final AbstractFilter executable = Files::isExecutable;
-    public static final AbstractFilter writable = Files::isWritable;
+    private Filters() {
+
+    }
+
+    public static final AbstractFilter REGULAR_FILE = Files::isRegularFile;
+    public static final AbstractFilter READABLE = Files::isReadable;
+    public static final AbstractFilter HIDDEN = Files::isHidden;
+    public static final AbstractFilter EXECUTABLE = Files::isExecutable;
+    public static final AbstractFilter WRITABLE = Files::isWritable;
 
     public static AbstractFilter largerThan(long size) {
         return path -> {
@@ -23,7 +27,7 @@ public class Filters {
         };
     }
 
-    public static AbstractFilter isSize(long size) {
+    public static AbstractFilter hasSize(long size) {
         return path -> {
             try {
                 return Files.size(path) == size;
@@ -65,7 +69,7 @@ public class Filters {
         };
     }
 
-    public static AbstractFilter regexContains(String regex){
+    public static AbstractFilter regexContains(String regex) {
         return path -> {
             Pattern extension = Pattern.compile(regex);
             Matcher matcher = extension.matcher(path.toString());

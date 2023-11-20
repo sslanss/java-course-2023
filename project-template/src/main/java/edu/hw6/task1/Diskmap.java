@@ -1,82 +1,125 @@
 package edu.hw6.task1;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.jetbrains.annotations.NotNull;
 
 public class Diskmap implements Map<String, String> {
 
-    private int size;
+    private final Map<String, String> filesMap;
 
-    private final Map<String, String> map;
+    private final Path directory;
 
-    public Diskmap(){
-        size = 0;
-        map = new HashMap<>();
+    public Diskmap(Path directory) throws IOException {
+        filesMap = new HashMap<>();
+        this.directory = directory.toAbsolutePath();
+        if (Files.exists(this.directory)) {
+            loadFilesToMap();
+        } else {
+            Files.createDirectory(this.directory);
+        }
     }
+
+    private void loadFilesToMap() throws IOException {
+        try (var filesStream = Files.list(directory)) {
+            filesStream.forEach(path -> {
+                try {
+                    String data = new String(
+                        Files.readAllBytes(path));
+                    filesMap.put(path.getFileName().toString(), data);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
     @Override
     public int size() {
-        return size;
+        return filesMap.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return filesMap.isEmpty();
     }
 
     @Override
     public boolean containsKey(Object key) {
-        return map.containsKey(key);
+        return filesMap.containsKey(key);
     }
 
     @Override
     public boolean containsValue(Object value) {
-        return map.containsValue(value);
+        return filesMap.containsValue(value);
     }
 
     @Override
     public String get(Object key) {
-        return map.get(key);
+        return filesMap.get(key);
     }
 
     @Override
     public String put(String key, String value) {
-        //т.е.в этом методе нужно создать такой файл, имя которого будет key, содержимое - value
-        //потом добавить это в hashmap
-        return null;
+        Path newFileName = directory.resolveSibling(key);
+        try {
+            if (!Files.exists(newFileName)) {
+                Files.createFile(newFileName);
+            }
+            try (var writer = new BufferedWriter(new FileWriter(String.valueOf(newFileName)))) {
+                var printWriter = new PrintWriter(writer);
+                printWriter.print(value);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return filesMap.put(key, value);
     }
 
     @Override
     public String remove(Object key) {
-        //удалить этот файл физически
-        //удалить его из hashmap
-        return null;
+        Path deletedFileName = directory.resolveSibling((Path) key);
+        String deletedValue = filesMap.remove(key);
+        if (deletedValue != null) {
+            try {
+                Files.delete(deletedFileName);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return deletedValue;
     }
 
     @Override
     public void putAll(Map<? extends String, ? extends String> m) {
-
+        m.forEach(this::put);
     }
 
     @Override
     public void clear() {
-        //удалить все файлы, которые есть уже в hashmap
-        //а потом очистить всю hashmap
+        filesMap.keySet().forEach(this::remove);
     }
 
     @Override
-    public Set<String> keySet() {
-        return map.keySet();
+    public @NotNull Set<String> keySet() {
+        return filesMap.keySet();
     }
 
     @Override
-    public Collection<String> values() {
-        return map.values();
+    public @NotNull Collection<String> values() {
+        return filesMap.values();
     }
 
     @Override
-    public Set<Entry<String, String>> entrySet() {
-        return map.entrySet();
+    public @NotNull Set<Entry<String, String>> entrySet() {
+        return filesMap.entrySet();
     }
 }

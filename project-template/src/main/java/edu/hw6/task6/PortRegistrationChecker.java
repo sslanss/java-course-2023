@@ -10,6 +10,7 @@ public class PortRegistrationChecker {
     private final Map<Integer, String> tcpPorts;
     private final Map<Integer, String> udpPorts;
 
+    @SuppressWarnings({"MagicNumber", "MultipleStringLiterals"})
     public PortRegistrationChecker() {
         tcpPorts = new HashMap<>() {{
             put(22, "SSH");
