@@ -1,5 +1,7 @@
 package edu.hw6.task1;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,7 +12,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.jetbrains.annotations.NotNull;
 
 public class Diskmap implements Map<String, String> {
 
@@ -30,15 +31,16 @@ public class Diskmap implements Map<String, String> {
 
     private void loadFilesToMap() throws IOException {
         try (var filesStream = Files.list(directory)) {
-            filesStream.forEach(path -> {
-                try {
-                    String data = new String(
-                        Files.readAllBytes(path));
-                    filesMap.put(path.getFileName().toString(), data);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            filesStream.filter(path -> !Files.isDirectory(path))
+                    .forEach(path -> {
+                        try {
+                            String data = new String(
+                                    Files.readAllBytes(path));
+                            filesMap.put(path.getFileName().toString(), data);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
         }
     }
 
@@ -69,7 +71,7 @@ public class Diskmap implements Map<String, String> {
 
     @Override
     public String put(String key, String value) {
-        Path newFileName = directory.resolveSibling(key);
+        Path newFileName = directory.resolve(key);
         try {
             if (!Files.exists(newFileName)) {
                 Files.createFile(newFileName);
@@ -86,7 +88,7 @@ public class Diskmap implements Map<String, String> {
 
     @Override
     public String remove(Object key) {
-        Path deletedFileName = directory.resolveSibling((Path) key);
+        Path deletedFileName = directory.resolve((String) key);
         String deletedValue = filesMap.remove(key);
         if (deletedValue != null) {
             try {
