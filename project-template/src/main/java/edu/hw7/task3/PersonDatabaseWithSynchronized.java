@@ -4,22 +4,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class PersonDatabaseImplWithLocks implements PersonDatabase {
+public class PersonDatabaseWithSynchronized implements PersonDatabase {
+
     private final Map<Integer, Person> peopleById;
     private final Map<String, List<Person>> peopleByName;
     private final Map<String, List<Person>> peopleByAddress;
     private final Map<String, List<Person>> peopleByPhone;
-    private final ReadWriteLock lock;
 
-    public PersonDatabaseImplWithLocks() {
+    private final Object lockObject;
+
+    public PersonDatabaseWithSynchronized() {
         peopleById = new HashMap<>();
         peopleByName = new HashMap<>();
         peopleByAddress = new HashMap<>();
         peopleByPhone = new HashMap<>();
-        lock = new ReentrantReadWriteLock();
+        lockObject = new Object();
     }
 
     private boolean isPersonValid(Person person) {
@@ -29,7 +29,6 @@ public class PersonDatabaseImplWithLocks implements PersonDatabase {
     private boolean isPeopleByIdContainsId(int id) {
         return peopleById.get(id) != null;
     }
-
     private void addPersonToMap(Map<String, List<Person>> map, String personField, Person person) {
         if (map.putIfAbsent(personField, new ArrayList<>() {{
             add(person);
@@ -48,21 +47,18 @@ public class PersonDatabaseImplWithLocks implements PersonDatabase {
     @Override
     public void add(Person person) {
         if (isPersonValid(person)) {
-            lock.writeLock().lock();
-            try {
+            synchronized (lockObject) {
                 if (!isPeopleByIdContainsId(person.id())) {
                     safelyAdd(person);
                 }
-            } finally {
-                lock.writeLock().unlock();
             }
         }
     }
-
     private void deletePersonFromMap(Map<String, List<Person>> map, String personField, Person person) {
         if (map.get(personField).size() == 1) {
-            map.remove(personField);
-        } else {
+                map.remove(personField);
+            }
+        else {
             map.get(personField).remove(person);
         }
     }
@@ -75,45 +71,32 @@ public class PersonDatabaseImplWithLocks implements PersonDatabase {
 
     @Override
     public void delete(int id) {
-        lock.writeLock().lock();
-        try {
+        synchronized (lockObject) {
             Person deletedPerson = peopleById.remove(id);
             if (deletedPerson != null) {
                 deleteSafely(deletedPerson);
             }
-        } finally {
-            lock.writeLock().unlock();
         }
     }
 
     @Override
-    public List<Person> findByName(String name) {
-        lock.readLock().lock();
-        try {
-            return peopleByName.get(name);
-        } finally {
-            lock.readLock().unlock();
-        }
+    public synchronized List<Person> getDataBaseRecords() {
+        return new ArrayList<>(peopleById.values());
     }
 
     @Override
-    public List<Person> findByAddress(String address) {
-        lock.readLock().lock();
-        try {
-            return peopleByAddress.get(address);
-        } finally {
-            lock.readLock().unlock();
-        }
+    public synchronized List<Person> findByName(String name) {
+        return peopleByName.get(name);
     }
 
     @Override
-    public List<Person> findByPhone(String phone) {
-        lock.readLock().lock();
-        try {
-            return peopleByPhone.get(phone);
-        } finally {
-            lock.readLock().unlock();
-        }
+    public synchronized List<Person> findByAddress(String address) {
+        return peopleByAddress.get(address);
+    }
+
+    @Override
+    public synchronized List<Person> findByPhone(String phone) {
+        return peopleByPhone.get(phone);
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -123,31 +106,27 @@ public class PersonDatabaseImplWithLocks implements PersonDatabase {
         Person p5 = new Person(5, "Bob", "AA", "8980");
         Person p6 = new Person(1, "Bob", "BB", "8980");
 
-        PersonDatabaseImpl base = new PersonDatabaseImpl();
+        PersonDatabaseWithSynchronized base = new PersonDatabaseWithSynchronized();
         base.add(p1);
         base.add(p2);
         base.add(p3);
         base.add(p5);
         base.add(p6);
-        //System.out.println(base.findByPhone("8980"));
         Thread thread = new Thread(() -> base.delete(1));
-        Thread thread2 = new Thread(() -> {
-            List<Person> list = base.findByPhone("8980");
-            //System.out.println(list);
-        });
+        Thread thread2 = new Thread(() -> base.findByPhone("8980"));
         Thread thread4 = new Thread(() -> base.findByPhone("8980"));
-        //Thread thread3 = new Thread(() -> base.delete(5));
+        Thread thread3 = new Thread(() -> base.delete(5));
         Thread thread5 = new Thread(() -> base.findByName("Bob"));
         thread.start();
         thread2.start();
-        //thread3.start();
+        /*thread3.start();
         thread4.start();
-        thread5.start();
+        thread5.start();*/
         thread.join();
         thread2.join();
-        //thread3.join();
+        /*thread3.join();
         thread4.join();
-        thread5.join();
+        thread5.join();*/
 
     }
 }
