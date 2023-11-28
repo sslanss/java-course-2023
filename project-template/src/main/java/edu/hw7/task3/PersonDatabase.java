@@ -6,7 +6,7 @@ public interface PersonDatabase {
     void add(Person person);
     void delete(int id);
 
-    public List<Person> getDataBaseRecords();
+    public List<Person> getRecords();
     List<Person>  findByName(String name);
     List<Person> findByAddress(String address);
     List<Person> findByPhone(String phone);

@@ -80,7 +80,7 @@ public class PersonDatabaseWithSynchronized implements PersonDatabase {
     }
 
     @Override
-    public synchronized List<Person> getDataBaseRecords() {
+    public synchronized List<Person> getRecords() {
         return new ArrayList<>(peopleById.values());
     }
 

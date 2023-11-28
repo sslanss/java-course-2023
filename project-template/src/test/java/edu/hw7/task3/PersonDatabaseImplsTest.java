@@ -1,12 +1,10 @@
 package edu.hw7.task3;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -43,7 +41,7 @@ public class PersonDatabaseImplsTest {
         for (var person : persons) {
             database.add(person);
         }
-        Assertions.assertThat(database.getDataBaseRecords()).containsExactlyInAnyOrder(persons.get(0),
+        Assertions.assertThat(database.getRecords()).containsExactlyInAnyOrder(persons.get(0),
             persons.get(1), persons.get(4), persons.get(5)
         );
     }
@@ -56,7 +54,7 @@ public class PersonDatabaseImplsTest {
         }
         database.delete(1);
         database.delete(2);
-        Assertions.assertThat(database.getDataBaseRecords()).containsExactlyInAnyOrder(
+        Assertions.assertThat(database.getRecords()).containsExactlyInAnyOrder(
             persons.get(4),
             persons.get(5)
         );
@@ -119,13 +117,93 @@ public class PersonDatabaseImplsTest {
             for (int i = 0; i < persons.size(); i++) {
                 int index = i;
                 deletingThreads.execute(() -> {
-                    database.delete(index+1);
+                    database.delete(index + 1);
                     deleteLatch.countDown();
                 });
             }
             deleteLatch.await();
-            Assertions.assertThat(database.getDataBaseRecords()).isEmpty();
+            Assertions.assertThat(database.getRecords()).isEmpty();
         }
     }
 
+    @ParameterizedTest
+    @MethodSource("databases")
+    public void testFindMethodsWithConcurrency(PersonDatabase database) throws InterruptedException {
+        try (var addingThreads = Executors.newFixedThreadPool(6)) {
+            CountDownLatch addLatch = new CountDownLatch(6);
+            for (int i = 0; i < persons.size(); i++) {
+                int index = i;
+                addingThreads.execute(() -> {
+                    database.add(persons.get(index));
+                    addLatch.countDown();
+                });
+            }
+            addLatch.await();
+        }
+        try (var findingThreads = Executors.newFixedThreadPool(10)) {
+            CountDownLatch findLatch = new CountDownLatch(100);
+            for (int i = 0; i < 100; i++) {
+                findingThreads.execute(() -> {
+                    Assertions.assertThat(database.findByName("Bob")).containsExactlyInAnyOrder(
+                        persons.get(0),
+                        persons.get(4)
+                    );
+                    findLatch.countDown();
+                });
+                findingThreads.execute(() -> {
+                    Assertions.assertThat(database.findByName("Sam")).containsExactlyInAnyOrder(
+                        persons.get(1),
+                        persons.get(5)
+                    );
+                    findLatch.countDown();
+                });
+                findingThreads.execute(() -> {
+                    Assertions.assertThat(database.findByAddress("AA")).containsExactlyInAnyOrder(persons.get(0));
+                    findLatch.countDown();
+                });
+                findingThreads.execute(() -> {
+                    Assertions.assertThat(database.findByPhone("8901")).containsExactlyInAnyOrder(persons.get(1));
+                    findLatch.countDown();
+                });
+                findingThreads.execute(() -> {
+                    Assertions.assertThat(database.findByAddress("DD")).isNull();
+                    findLatch.countDown();
+                });
+                findingThreads.execute(() -> {
+                    Assertions.assertThat(database.findByPhone("8902")).isNull();
+                    findLatch.countDown();
+                });
+            }
+            findLatch.await();
+        }
+    }
+
+    private boolean isDataBaseSynchronizedAfterChanges(List<Person> dataBaseRecords, List<Person> findingRecords) {
+        return findingRecords == null || dataBaseRecords.containsAll(findingRecords);
+    }
+    @ParameterizedTest
+    @MethodSource("databases")
+    public void testCombinedWithConcurrency(PersonDatabase database) throws InterruptedException {
+        for (var person : persons) {
+            database.add(person);
+        }
+        try (var deletingThreads = Executors.newFixedThreadPool(10);
+             var findingThreads = Executors.newFixedThreadPool(10)) {
+            for (int i = 0; i < 10; i++) {
+                int index = i;
+                deletingThreads.execute(() -> {
+                    database.delete(index + 1);
+                });
+                findingThreads.execute(() -> {
+                    Assertions.assertThat(isDataBaseSynchronizedAfterChanges(database.getRecords(),
+                        database.findByName("Bob"))).isTrue();
+                });
+                findingThreads.execute(() -> {
+                    Assertions.assertThat(isDataBaseSynchronizedAfterChanges(database.getRecords(),
+                        database.findByAddress("CC"))).isTrue();
+                });
+            }
+        }
+
+    }
 }
