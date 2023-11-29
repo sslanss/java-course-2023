@@ -3,6 +3,9 @@ package edu.hw7.task1;
 import java.util.ArrayList;
 
 public class HelperThreads {
+    private HelperThreads() {
+
+    }
 
     public static void incByThreads(Incrementor incrementor, int numberOfThreads, int incTimes)
         throws InterruptedException {

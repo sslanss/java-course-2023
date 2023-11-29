@@ -11,17 +11,12 @@ public class Factorial {
     }
 
     public BigInteger countParallel() {
-        if (value <= 0) {
+        if (value < 0) {
             return BigInteger.valueOf(value);
         }
         return LongStream.rangeClosed(1, value)
             .parallel()
             .mapToObj(BigInteger::valueOf)
             .reduce(BigInteger.ONE, BigInteger::multiply);
-    }
-
-    public static void main(String[] args) {
-        Factorial factorial = new Factorial(10);
-        System.out.println(factorial.countParallel());
     }
 }

@@ -2,7 +2,6 @@ package edu.hw7.task3;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import org.assertj.core.api.Assertions;
@@ -13,8 +12,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class PersonDatabaseImplsTest {
     private static ArrayList<Person> persons;
-
-    private static final Random random = new Random();
 
     @BeforeAll
     public static void initializePersons() {
@@ -181,9 +178,10 @@ public class PersonDatabaseImplsTest {
     private boolean isDataBaseSynchronizedAfterChanges(List<Person> dataBaseRecords, List<Person> findingRecords) {
         return findingRecords == null || dataBaseRecords.containsAll(findingRecords);
     }
+
     @ParameterizedTest
     @MethodSource("databases")
-    public void testCombinedWithConcurrency(PersonDatabase database) throws InterruptedException {
+    public void testCombinedMethodsWithConcurrency(PersonDatabase database) {
         for (var person : persons) {
             database.add(person);
         }
@@ -191,17 +189,20 @@ public class PersonDatabaseImplsTest {
              var findingThreads = Executors.newFixedThreadPool(10)) {
             for (int i = 0; i < 10; i++) {
                 int index = i;
-                deletingThreads.execute(() -> {
-                    database.delete(index + 1);
-                });
-                findingThreads.execute(() -> {
-                    Assertions.assertThat(isDataBaseSynchronizedAfterChanges(database.getRecords(),
-                        database.findByName("Bob"))).isTrue();
-                });
-                findingThreads.execute(() -> {
-                    Assertions.assertThat(isDataBaseSynchronizedAfterChanges(database.getRecords(),
-                        database.findByAddress("CC"))).isTrue();
-                });
+                deletingThreads.execute(() ->
+                    database.delete(index + 1));
+                findingThreads.execute(() ->
+                    Assertions.assertThat(isDataBaseSynchronizedAfterChanges(
+                        database.getRecords(),
+                        database.findByName("Bob")
+                    )).isTrue()
+                );
+                findingThreads.execute(() ->
+                    Assertions.assertThat(isDataBaseSynchronizedAfterChanges(
+                        database.getRecords(),
+                        database.findByAddress("CC")
+                    )).isTrue()
+                );
             }
         }
 

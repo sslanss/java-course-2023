@@ -29,6 +29,7 @@ public class PersonDatabaseWithSynchronized implements PersonDatabase {
     private boolean isPeopleByIdContainsId(int id) {
         return peopleById.get(id) != null;
     }
+
     private void addPersonToMap(Map<String, List<Person>> map, String personField, Person person) {
         if (map.putIfAbsent(personField, new ArrayList<>() {{
             add(person);
@@ -54,11 +55,11 @@ public class PersonDatabaseWithSynchronized implements PersonDatabase {
             }
         }
     }
+
     private void deletePersonFromMap(Map<String, List<Person>> map, String personField, Person person) {
         if (map.get(personField).size() == 1) {
-                map.remove(personField);
-            }
-        else {
+            map.remove(personField);
+        } else {
             map.get(personField).remove(person);
         }
     }
@@ -97,36 +98,5 @@ public class PersonDatabaseWithSynchronized implements PersonDatabase {
     @Override
     public synchronized List<Person> findByPhone(String phone) {
         return peopleByPhone.get(phone);
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        Person p1 = new Person(1, "Bob", "AA", "8980");
-        Person p2 = new Person(2, "Bob", "BB", "8981");
-        Person p3 = new Person(3, "Bob", "AA", "8980");
-        Person p5 = new Person(5, "Bob", "AA", "8980");
-        Person p6 = new Person(1, "Bob", "BB", "8980");
-
-        PersonDatabaseWithSynchronized base = new PersonDatabaseWithSynchronized();
-        base.add(p1);
-        base.add(p2);
-        base.add(p3);
-        base.add(p5);
-        base.add(p6);
-        Thread thread = new Thread(() -> base.delete(1));
-        Thread thread2 = new Thread(() -> base.findByPhone("8980"));
-        Thread thread4 = new Thread(() -> base.findByPhone("8980"));
-        Thread thread3 = new Thread(() -> base.delete(5));
-        Thread thread5 = new Thread(() -> base.findByName("Bob"));
-        thread.start();
-        thread2.start();
-        /*thread3.start();
-        thread4.start();
-        thread5.start();*/
-        thread.join();
-        thread2.join();
-        /*thread3.join();
-        thread4.join();
-        thread5.join();*/
-
     }
 }

@@ -23,7 +23,7 @@ public class PersonDatabaseWithLocks implements PersonDatabase {
     }
 
     @Override
-    public synchronized List<Person> getRecords(){
+    public synchronized List<Person> getRecords() {
         return new ArrayList<>(peopleById.values());
     }
 
@@ -119,40 +119,5 @@ public class PersonDatabaseWithLocks implements PersonDatabase {
         } finally {
             lock.readLock().unlock();
         }
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        Person p1 = new Person(1, "Bob", "AA", "8980");
-        Person p2 = new Person(2, "Bob", "BB", "8981");
-        Person p3 = new Person(3, "Bob", "AA", "8980");
-        Person p5 = new Person(5, "Bob", "AA", "8980");
-        Person p6 = new Person(1, "Bob", "BB", "8980");
-
-        PersonDatabaseWithSynchronized base = new PersonDatabaseWithSynchronized();
-        base.add(p1);
-        base.add(p2);
-        base.add(p3);
-        base.add(p5);
-        base.add(p6);
-        //System.out.println(base.findByPhone("8980"));
-        Thread thread = new Thread(() -> base.delete(1));
-        Thread thread2 = new Thread(() -> {
-            List<Person> list = base.findByPhone("8980");
-            //System.out.println(list);
-        });
-        Thread thread4 = new Thread(() -> base.findByPhone("8980"));
-        //Thread thread3 = new Thread(() -> base.delete(5));
-        Thread thread5 = new Thread(() -> base.findByName("Bob"));
-        thread.start();
-        thread2.start();
-        //thread3.start();
-        thread4.start();
-        thread5.start();
-        thread.join();
-        thread2.join();
-        //thread3.join();
-        thread4.join();
-        thread5.join();
-
     }
 }
