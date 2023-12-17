@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public class Task1Test {
     @Test
-    void toStringMethodShouldReturnHelloWorld()
+    public void toStringMethodShouldReturnHelloWorld()
         throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         String testString = "Hello World";
 

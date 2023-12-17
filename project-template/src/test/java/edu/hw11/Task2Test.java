@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 public class Task2Test {
     @Test
-    void classesBehaviourShouldBeModified() {
+    public void classesBehaviourShouldBeModified() {
         int a = 1;
         int b = 3;
 
