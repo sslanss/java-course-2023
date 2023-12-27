@@ -25,7 +25,7 @@ public class HackerNews {
             .uri(URI.create(TOP_STORIES_URL))
             .GET()
             .build();
-        /*try (var client = HttpClient.newBuilder()
+        try (var client = HttpClient.newBuilder()
             .build()) {
             try {
                 var response = client
@@ -36,16 +36,16 @@ public class HackerNews {
             } catch (IOException | InterruptedException e) {
                 return new long[] {};
             }
-        }*/
+        }
         return new long[] {};
     }
 
-    public String news(long id) throws IOException, InterruptedException {
+    public String news(long id) {
         var request = HttpRequest.newBuilder()
             .uri(URI.create(String.format(STORY_URL, id)))
             .GET()
             .build();
-        /*try (var client = HttpClient.newBuilder()
+        try (var client = HttpClient.newBuilder()
             .build()) {
             try {
                 var response = client
@@ -56,7 +56,7 @@ public class HackerNews {
             } catch (IOException | InterruptedException e) {
                 return "";
             }
-        }*/
+        }
         return "";
     }
 
