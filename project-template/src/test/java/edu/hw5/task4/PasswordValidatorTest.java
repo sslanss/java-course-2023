@@ -1,27 +1,20 @@
 package edu.hw5.task4;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class PasswordValidatorTest {
 
-    @Test
-    public void testValidPassword() {
-        assertThat(PasswordValidator.isPasswordValid("P@ssw")).isTrue();
-
-        assertThat(PasswordValidator.isPasswordValid("#%")).isTrue();
-
-        assertThat(PasswordValidator.isPasswordValid("!@#$%^&*|\\^")).isTrue();
+    @ParameterizedTest
+    @ValueSource(strings = {"P@ssw", "#%", "!@#$%^&*|\\^"})
+    public void testValidPassword(String password) {
+        assertThat(PasswordValidator.isPasswordValid(password)).isTrue();
     }
 
-    @Test
-    public void testInvalidPassword() {
-        assertThat(PasswordValidator.isPasswordValid("")).isFalse();
-
-        assertThat(PasswordValidator.isPasswordValid("Password123")).isFalse();
-
-        assertThat(PasswordValidator.isPasswordValid("(((Password))))")).isFalse();
-
-        assertThat(PasswordValidator.isPasswordValid("123456")).isFalse();
+    @ParameterizedTest
+    @ValueSource(strings = {"", "Password123", "(((Password))))", "123456"})
+    public void testInvalidPassword(String password) {
+        assertThat(PasswordValidator.isPasswordValid(password)).isFalse();
     }
 }

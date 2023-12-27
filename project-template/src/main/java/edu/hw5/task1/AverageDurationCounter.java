@@ -21,9 +21,9 @@ public class AverageDurationCounter {
             input.stream()
                 .map(this::getDuration)
                 .filter((duration) -> !duration.isZero())
-                .mapToLong(Duration::toMillis)
+                .mapToLong(Duration::toMinutes)
                 .average().orElse(0);
-        return formatDuration(Duration.ofMillis((long) averageDurationInMillis));
+        return formatDuration(Duration.ofMinutes((long) averageDurationInMillis));
     }
 
     private Duration getDuration(String line) {
@@ -32,7 +32,8 @@ public class AverageDurationCounter {
         if (matcher.find()) {
             LocalDateTime startSession = convertToDateTime(matcher.group(1));
             LocalDateTime endSession = convertToDateTime(matcher.group(2));
-            if (startSession != null && endSession != null && startSession.isBefore(endSession)) {
+            if (startSession != null && endSession != null && (startSession.isBefore(endSession) ||
+                startSession.isEqual(endSession))) {
                 sessionDuration = Duration.between(startSession, endSession);
             }
         }
