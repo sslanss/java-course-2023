@@ -35,6 +35,9 @@
         <junit.version>5.10.0</junit.version>
         <assertj.version>3.24.2</assertj.version>
 
+        <bytebuddy.version>1.14.9</bytebuddy.version>
+        <asm.version>9.6</asm.version>
+
         <maven-checkstyle-plugin.version>3.3.0</maven-checkstyle-plugin.version>
 
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
@@ -96,10 +99,28 @@
             <scope>test</scope>
         </dependency>
 
+       <!-- <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.14.9</version> &lt;!&ndash; Замените на актуальную версию Byte Buddy &ndash;&gt;
+        </dependency>-->
+
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>${asm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy-agent</artifactId>
+            <version>${bytebuddy.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.14.9</version> <!-- Замените на актуальную версию Byte Buddy -->
+            <version>${bytebuddy.version}</version>
         </dependency>
 
         <dependency>
