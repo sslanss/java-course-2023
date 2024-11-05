@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings({"RegexpSinglelineJava", "MultipleStringLiterals"})
 public class PortRegistrationChecker {
     private final Map<Integer, String> tcpPorts;
     private final Map<Integer, String> udpPorts;

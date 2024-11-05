@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.jetbrains.annotations.NotNull;
+
 @SuppressWarnings("MagicNumber")
 public class PrimGenerator implements Generator {
     private final Random random = new Random();

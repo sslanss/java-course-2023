@@ -46,8 +46,6 @@ public class MD5Decryptor {
         }
     }
 
-    //MessageDigest не является потокобезопасным.
-    // Следовательно, мы должны использовать новый экземпляр для каждого потока.
     public void decryptPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest messageDigest = MessageDigest.getInstance("MD5");
         messageDigest.update(password.getBytes(StandardCharsets.UTF_8));
@@ -57,7 +55,6 @@ public class MD5Decryptor {
         while (hashText.length() < 32) {
             hashText = new StringBuilder("0" + hashText);
         }
-        System.out.println(hashText);
     }
 
     public List<String> decryptPasswordsBySize(int size) {
@@ -89,12 +86,5 @@ public class MD5Decryptor {
             sb.append(ALL_CHARACTERS.charAt(index));
         }
         return sb.toString();
-    }
-
-    public static void main(String[] args) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        MD5Decryptor dec = new MD5Decryptor();
-        String str = "qwerty";
-        dec.decryptPassword(str);
-        System.out.println("d8578edf8458ce06fbc5bb76a58c5ca4");
     }
 }

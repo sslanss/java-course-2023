@@ -2,6 +2,7 @@ package edu.project1.handlers;
 
 import edu.project1.game.GuessResult;
 import java.util.Set;
+
 @SuppressWarnings("RegexpSinglelineJava")
 public class GameOutputHandler {
 

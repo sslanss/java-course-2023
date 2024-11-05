@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Set;
+
 @SuppressWarnings("RegexpSinglelineJava")
 public class PlayerInputHandler {
 
@@ -21,6 +22,7 @@ public class PlayerInputHandler {
         return availableLetters.contains(symbol);
     }
 
+    @SuppressWarnings("MagicNumber")
     public int getWordCategory() {
         System.out.println("\nChoose the category: ");
         System.out.println("1 - Animals\n2 - Countries\n3 - Fillings\n4 - Transport");

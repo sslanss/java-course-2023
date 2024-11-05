@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("MagicNumber")
 public class NumberFormatDateParser extends DateParser {
     private static final Map<Pattern, Function<Matcher, LocalDate>> FUNCTION_MAP;
 

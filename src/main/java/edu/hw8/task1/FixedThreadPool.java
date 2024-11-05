@@ -4,6 +4,18 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class FixedThreadPool implements ThreadPool {
+    private final int threadsNumber;
+    private final Thread[] workers;
+    private final BlockingQueue<Runnable> taskQueue;
+    private volatile boolean isRunning;
+
+    private FixedThreadPool(int size) {
+        threadsNumber = size;
+        workers = new Thread[size];
+        taskQueue = new LinkedBlockingQueue<>();
+        isRunning = false;
+    }
+
     private class Worker implements Runnable {
         @Override
         public void run() {
@@ -20,18 +32,6 @@ public class FixedThreadPool implements ThreadPool {
         private boolean isRunning() {
             return !Thread.currentThread().isInterrupted();
         }
-    }
-
-    private final int threadsNumber;
-    private final Thread[] workers;
-    private final BlockingQueue<Runnable> taskQueue;
-    private volatile boolean isRunning;
-
-    private FixedThreadPool(int size) {
-        threadsNumber = size;
-        workers = new Thread[size];
-        taskQueue = new LinkedBlockingQueue<>();
-        isRunning = false;
     }
 
     public static FixedThreadPool create(int size) {

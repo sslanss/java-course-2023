@@ -3,6 +3,9 @@ package edu.hw5.task7_8;
 import java.util.regex.Pattern;
 
 public final class RegexUtils {
+    private RegexUtils() {
+
+    }
 
     //задание 7
     //содержит не менее 3 символов, причем третий символ равен 0
