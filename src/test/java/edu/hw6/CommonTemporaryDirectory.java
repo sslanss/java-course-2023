@@ -13,9 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 public class CommonTemporaryDirectory {
-    //protected static final Path TEMP_DIRECTORY = Path.of("D:\\Java_labs\\test");
-
-    protected static final Path TEMP_DIRECTORY = Path.of(System.getProperty("java.io.tmpdir") + "\\testTmpDir");
+    protected static final Path TEMP_DIRECTORY = Path.of("src", "test", "resources", "testDir");
 
     @BeforeEach
     void createTempDirectory() throws IOException {

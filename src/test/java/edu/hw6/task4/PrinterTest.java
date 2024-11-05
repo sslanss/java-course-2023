@@ -25,7 +25,7 @@ public class PrinterTest extends CommonTemporaryDirectory {
     @Test
     public void printShouldWorkCorrectlyIfFileExists() throws IOException {
         Path file = TEMP_DIRECTORY.resolve("test.txt");
-        createTempFile(file.toString(), "");
+        createTempFile("test.txt", "");
         Printer.print(file);
         Assertions.assertThat(tryToReadFile(
             file,
